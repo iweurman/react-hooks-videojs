@@ -1,10 +1,11 @@
 import React, { useLayoutEffect, useRef, useState } from 'react'
 import videojs from 'video.js'
 
-export default (props) => {
+export default () => {
 
   const [key, setkey] = useState(0)
-  const videoNode = useRef(null)
+  let videoNode = useRef(null)
+  let player = undefined;
   const options = {
     autoplay: true,
     controls: true,
@@ -15,12 +16,12 @@ export default (props) => {
   }
 
   useLayoutEffect(() => {
-    const player = videojs(videoNode.current, options).ready(() => {
-      console.log('Player ready')
-    });
+    player = videojs(videoNode.current, options).ready()
     return () => {
-      player.dispose()
-      setkey(key + 1)
+      if(player) {
+        player.dispose()
+        setkey(key + 1)
+      }
     }
   }, [options.sources.src])
 
